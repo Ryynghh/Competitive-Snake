@@ -1,11 +1,11 @@
-// Konfigurasi & DOM Elements
+// Configuration & DOM Elements
 const GRID = 20, TICK = 140, MAX_FOOD = 5;
 const $ = (id) => document.getElementById(id);
 const canvas = $('game-canvas'), ctx = canvas.getContext('2d'), CELL = canvas.width / GRID;
 let state = 'START', pSnake = [], bSnake = [], pDir = 'RIGHT', nextPDir = 'RIGHT', bDir = 'LEFT', foods = [], timer = 60;
 let gameInt, timerInt, audioCtx;
 
-// Audio System Terpusat
+// Centralized Audio System
 const playSound = (type) => {
     if ($('mute-checkbox').checked) return;
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -26,7 +26,7 @@ const playSound = (type) => {
     else if (type === 'win') [261.63, 329.63, 392.00, 523.25].forEach((f, i) => setTimeout(() => play(f, 'triangle', 0.1, 0.08), i * 120));
 };
 
-// Helper Logic (Koordinat, Collisions, Pathfinding & Spawn)
+// Helper Logic (Coordinates, Collisions, Pathfinding & Spawning)
 const isOccupied = (x, y) => [...pSnake, ...bSnake, ...foods].some(s => s.x === x && s.y === y);
 const getNextHead = (h, d) => ({ x: h.x + (d === 'RIGHT' ? 1 : d === 'LEFT' ? -1 : 0), y: h.y + (d === 'DOWN' ? 1 : d === 'UP' ? -1 : 0) });
 const getNeighbors = (p) => [{ x: p.x, y: p.y - 1, d: 'UP' }, { x: p.x, y: p.y + 1, d: 'DOWN' }, { x: p.x - 1, y: p.y, d: 'LEFT' }, { x: p.x + 1, y: p.y, d: 'RIGHT' }].filter(n => n.x >= 0 && n.x < GRID && n.y >= 0 && n.y < GRID);
@@ -53,7 +53,7 @@ const getBotDir = (head, targets, obs) => {
     return safe.length ? safe.sort((a, b) => getNeighbors(b).filter(n => !obs.has(`${n.x},${n.y}`)).length - getNeighbors(a).filter(n => !obs.has(`${n.x},${n.y}`)).length)[0].d : 'LEFT';
 };
 
-// Core Game Loop & Evaluasi Status
+// Core Game Loop & Status Evaluation
 const gameTick = () => {
     pDir = nextPDir;
     let obs = new Set([...pSnake, ...bSnake.slice(1)].map(s => `${s.x},${s.y}`));
@@ -63,7 +63,7 @@ const gameTick = () => {
     let pDead = nP.x < 0 || nP.x >= GRID || nP.y < 0 || nP.y >= GRID || [...pSnake, ...bSnake].some(s => s.x === nP.x && s.y === nP.y) || (nP.x === nB.x && nP.y === nB.y);
     let bDead = nB.x < 0 || nB.x >= GRID || nB.y < 0 || nB.y >= GRID || [...pSnake, ...bSnake.slice(1)].some(s => s.x === nB.x && s.y === nB.y) || (nP.x === nB.x && nP.y === nB.y);
 
-    if (pDead || bDead) return endGame(pDead, bDead, pDead && bDead ? "Head-on atau mutual collision!" : pDead ? "Kamu menabrak tembok/badan!" : "Bot menabrak tembok/badan!");
+    if (pDead || bDead) return endGame(pDead, bDead, pDead && bDead ? "Head-on or mutual collision!" : pDead ? "You hit a wall/body!" : "Bot hit a wall/body!");
 
     const move = (snake, head, isBot) => {
         let fIdx = foods.findIndex(f => f.x === head.x && f.y === head.y);
@@ -77,21 +77,21 @@ const gameTick = () => {
     draw();
 };
 
-const endGame = (pDead, bDead, reason = "Waktu habis!") => {
+const endGame = (pDead, bDead, reason = "Time's up!") => {
     clearInterval(gameInt); clearInterval(timerInt); state = 'GAMEOVER';
     let [pLen, bLen] = [pSnake.length, bSnake.length];
     let win = !pDead && bDead ? true : (pDead && !bDead ? false : pLen > bLen);
     let drawGame = pDead === bDead && pLen === bLen;
 
     $('overlay-title').textContent = drawGame ? "IT'S A DRAW!" : win ? "YOU WIN!" : "YOU LOSE!";
-    $('overlay-desc').innerHTML = `${reason}<br>Kamu: ${pLen} | Bot: ${bLen}`;
+    $('overlay-desc').innerHTML = `${reason}<br>You: ${pLen} | Bot: ${bLen}`;
     $('start-btn').textContent = "PLAY AGAIN";
     $('overlay').className = 'overlay-visible';
     playSound(drawGame || !win ? 'crash' : 'win');
     draw();
 };
 
-// Sistem Rendering Visual
+// Visual Rendering System
 const draw = () => {
     ctx.fillStyle = '#0c0c0e'; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = '#1a1a24'; ctx.lineWidth = 1;
@@ -125,7 +125,7 @@ const draw = () => {
     drawSnake(pSnake, '#4eff4e', '#1c5e1c', pDir); drawSnake(bSnake, '#ff4e4e', '#b71c1c', bDir);
 };
 
-// Inisialisasi & Event Listeners
+// Initialization & Event Listeners
 const start = () => {
     pSnake = [{ x: 4, y: 10 }, { x: 3, y: 10 }, { x: 2, y: 10 }]; bSnake = [{ x: 15, y: 10 }, { x: 16, y: 10 }, { x: 17, y: 10 }];
     pDir = nextPDir = 'RIGHT'; bDir = 'LEFT'; foods = []; timer = 60; state = 'PLAYING';
