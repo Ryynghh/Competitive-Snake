@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Competitive Snake - Retro Arcade Arena</title>
+    <!-- Google Fonts for retro game feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <header>
+            <h1 class="pixel-text">SNAKE ARENA</h1>
+            <p class="subtitle">Competitive Snake Game</p>
+        </header>
+
+        <!-- Status Panel: Time & Scores -->
+        <div id="status-panel">
+            <div class="status-item" id="timer-box">
+                <span class="label">TIME</span>
+                <span id="timer-val" class="value text-red">60</span>
+            </div>
+            <div class="status-item" id="player-score-box">
+                <span class="label">YOU (GREEN)</span>
+                <span id="player-len" class="value text-green">3</span>
+            </div>
+            <div class="status-item" id="bot-score-box">
+                <span class="label">BOT (RED)</span>
+                <span id="bot-len" class="value text-orange">3</span>
+            </div>
+        </div>
+
+        <!-- Game Area & Overlay -->
+        <div id="canvas-wrapper">
+            <canvas id="game-canvas" width="400" height="400"></canvas>
+
+            <!-- Start / Game Over Overlay -->
+            <div id="overlay" class="overlay-visible">
+                <div id="overlay-content">
+                    <h2 id="overlay-title" class="pixel-text">START GAME</h2>
+                    <p id="overlay-desc">Defeat the Bot! Survive 60 seconds and grow longer than the Bot to win.</p>
+
+                    <button id="start-btn" class="pixel-btn">PLAY</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile-controls">
+            <div class="control-row">
+                <button id="btn-up" class="ctrl-btn">▲</button>
+            </div>
+            <div class="control-row">
+                <button id="btn-left" class="ctrl-btn">◀</button>
+                <button id="btn-down" class="ctrl-btn">▼</button>
+                <button id="btn-right" class="ctrl-btn">▶</button>
+            </div>
+        </div>
+
+        <!-- Info & Mute Settings -->
+        <footer id="game-info">
+            <p class="desktop-tip">Use <strong>ARROW</strong> keys or <strong>W, A, S, D</strong> on keyboard to steer
+                your snake.</p>
+            <div class="sound-control">
+                <label for="mute-checkbox">
+                    <input type="checkbox" id="mute-checkbox"> 🔇 Mute Sound
+                </label>
+            </div>
+        </footer>
+    </div>
+
+    <script src="snake.js"></script>
+</body>
+
+</html>
